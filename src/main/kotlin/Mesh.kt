@@ -2,6 +2,7 @@ package org.example
 
 import org.lwjgl.opengl.GL33.*
 import org.lwjgl.system.MemoryStack
+import org.lwjgl.system.MemoryUtil
 import java.nio.FloatBuffer
 import java.nio.IntBuffer
 
@@ -24,21 +25,23 @@ class Mesh(
 
         vbo = glGenBuffers()
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        MemoryStack.stackPush().use { stack ->
-            val buffer = stack.mallocFloat(vertices.size)
+        run {
+            val buffer = MemoryUtil.memAllocFloat(vertices.size)
             buffer.put(vertices)
             buffer.flip()
             glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
+            MemoryUtil.memFree(buffer)
         }
         
 
         ebo = glGenBuffers()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo)
-        MemoryStack.stackPush().use { stack ->
-            val buffer = stack.mallocInt(indices.size)
+        run {
+            val buffer = MemoryUtil.memAllocInt(indices.size)
             buffer.put(indices)
             buffer.flip()
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
+            MemoryUtil.memFree(buffer)
         }
         
 

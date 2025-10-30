@@ -36,6 +36,8 @@ class KeyboardRenderer {
     private var tableModel: OBJModel? = null
     private var tableTexture: Int = 0
     
+    private var mouseModel: OBJModel? = null
+    
     private var lightAnimationTime = 0.0f
     private var dynamicLightPosition = org.joml.Vector3f(0.0f, 5.0f, 0.0f)
     
@@ -171,6 +173,16 @@ class KeyboardRenderer {
 
             createTable()
             
+            val mouseObjPath = "src/main/resources/models/10106_Computer Mouse_v1_L3.obj"
+            if (File(mouseObjPath).exists()) {
+                val mouseMeshes = OBJLoader.loadOBJ(mouseObjPath, Material.GRAY_PLASTIC)
+                if (mouseMeshes.isNotEmpty()) {
+                    mouseModel = OBJModel(mouseMeshes)
+                    mouseModel!!.setRotation(org.joml.Vector3f(-90.0f, 0.0f, 0.0f))
+                    mouseModel!!.setPosition(org.joml.Vector3f(7.5f, 0.0f, -5.0f))
+                    mouseModel!!.setScale(org.joml.Vector3f(0.18f, 0.18f, 0.18f))
+                }
+            }
             
 
             setupLighting()
@@ -373,6 +385,7 @@ class KeyboardRenderer {
         
 
         keyboardModel?.draw(shader!!)
+        mouseModel?.draw(shader!!)
         
 
         shader?.stop()
@@ -621,7 +634,7 @@ class KeyboardRenderer {
         
 
         tableModel!!.setPosition(Vector3f(0.0f, -0.2f, -5.0f))
-        tableModel!!.setScale(Vector3f(8.0f, 0.4f, 6.0f)) 
+        tableModel!!.setScale(Vector3f(16.0f, 0.4f, 12.0f)) 
         
     }
     
@@ -789,6 +802,7 @@ class KeyboardRenderer {
     private fun cleanup() {
         keyboardModel?.cleanup()
         tableModel?.cleanup()
+        mouseModel?.cleanup()
         shader?.cleanup()
         
         glfwDestroyWindow(window)
